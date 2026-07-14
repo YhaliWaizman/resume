@@ -1,0 +1,88 @@
+name: DNS monitor
+
+on:
+  schedule:
+    - cron: "0 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-dns:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve DNS record
+        id: dns
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          record="$(dig +short www.yhali-waizman.com CNAME | sed 's/\.$//' | head -n1)"
+          if [[ -z "$record" ]]; then
+            record="$(dig +short www.yhali-waizman.com A | head -n1)"
+          fi
+
+          if [[ -z "$record" ]]; then
+            echo "Failed to resolve DNS for www.yhali-waizman.com" >&2
+            exit 1
+          fi
+
+          if echo "$record" | grep -qi "parkingspot"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "record=$record" >> "$GITHUB_OUTPUT"
+
+      - name: Notify when DNS changed
+        if: steps.dns.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        env:
+          CURRENT_RECORD: ${{ steps.dns.outputs.record }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issueTitle = 'DNS monitor: www.yhali-waizman.com';
+            const marker = 'dns-value:';
+            const current = process.env.CURRENT_RECORD;
+            const now = new Date().toISOString();
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100
+            });
+            let issue = issues.find((i) => i.title === issueTitle);
+            if (!issue) {
+              const created = await github.rest.issues.create({
+                owner,
+                repo,
+                title: issueTitle,
+                body: 'Auto-created by the DNS monitor workflow.'
+              });
+              issue = created.data;
+            }
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: issue.number,
+              per_page: 100
+            });
+            const lastTagged = [...comments].reverse().find((c) => c.body?.includes(marker));
+            const previous = lastTagged?.body?.split(marker)[1]?.trim();
+            if (previous === current) {
+              core.info(`Already notified for ${current}`);
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: issue.number,
+              body: `DNS for www.yhali-waizman.com changed from parkingspot to \`${current}\` (${now}).\n\n${marker} ${current}`
+            });
