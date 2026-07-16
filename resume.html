@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yhali Weizman - ML/DevOps Engineer</title>
+  <meta name="description"
+    content="ML/DevOps Engineer building data and AI infrastructure that survives production. Data warehouse/data-lake platforms, AI inference pipelines, and DevOps tooling.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --base: #0f1216;
+      /* warm-neutral dark, not pure black */
+      --surface: #171b21;
+      --surface-2: #1e242c;
+      --border: #2a323d;
+      --text: #d6dde5;
+      /* light neutral, ~11:1 on --base */
+      --muted: #8c98a6;
+      /* ~5.1:1 on --base, AA for text */
+      --accent: #ffb454;
+      /* amber phosphor, used sparingly */
+      --accent-dim: #c9863a;
+      --danger: #ff6b6b;
+      --radius: 10px;
+      --maxw: 820px;
+      --nav-w: 232px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--base);
+      color: var(--text);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    code,
+    .mono,
+    pre,
+    .tag,
+    nav a,
+    .kicker,
+    .prompt {
+      font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Visible, high-contrast focus for keyboard users */
+    a:focus-visible,
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: var(--accent);
+      color: #1a1205;
+      padding: .6rem 1rem;
+      font-weight: 600;
+      z-index: 100;
+      border-radius: 0 0 var(--radius) 0;
+    }
+
+    .skip-link:focus {
+      left: 0;
+    }
+
+    /* ---------- Layout ---------- */
+    .shell {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      width: var(--nav-w);
+      height: 100vh;
+      flex-shrink: 0;
+      padding: 2.4rem 1.4rem;
+      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--surface) 0%, var(--base) 100%);
+    }
+
+    .brand {
+      margin-bottom: 2.2rem;
+    }
+
+    .brand .name {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .brand .name .cursor {
+      display: inline-block;
+      width: .55ch;
+      background: var(--accent);
+      color: transparent;
+      animation: blink 1.15s steps(1) infinite;
+      margin-left: 1px;
+    }
+
+    .brand .role {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: .35rem;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav li {
+      margin: 0;
+    }
+
+    nav a {
+      display: block;
+      padding: .5rem .7rem;
+      font-size: .82rem;
+      color: var(--muted);
+      border-radius: 6px;
+      border-left: 2px solid transparent;
+    }
+
+    nav a::before {
+      content: "→ ";
+      color: var(--border);
+    }
+
+    nav a:hover {
+      color: var(--text);
+      background: var(--surface-2);
+      text-decoration: none;
+    }
+
+    nav a[aria-current="true"] {
+      color: var(--accent);
+      background: var(--surface-2);
+      border-left-color: var(--accent);
+    }
+
+    nav a[aria-current="true"]::before {
+      color: var(--accent);
+    }
+
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 3.2rem clamp(1.2rem, 5vw, 3.5rem);
+      max-width: calc(var(--maxw) + 7rem);
+      margin: 0 auto;
+    }
+
+    section {
+      margin-bottom: 4rem;
+      scroll-margin-top: 2rem;
+    }
+
+    .kicker {
+      display: block;
+      color: var(--accent);
+      font-size: .8rem;
+      letter-spacing: .5px;
+      margin-bottom: .5rem;
+    }
+
+    h1 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin: 0 0 1rem;
+    }
+
+    h2 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 1.3rem;
+      letter-spacing: -0.5px;
+      margin: 0 0 1.4rem;
+      padding-bottom: .6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 .hash {
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: 1.02rem;
+      margin: 0;
+    }
+
+    .lede {
+      font-size: 1.12rem;
+      color: var(--text);
+      max-width: 62ch;
+    }
+
+    .lede .sub {
+      color: var(--muted);
+    }
+
+    p {
+      max-width: 66ch;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.4rem;
+      margin-top: 1.6rem;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .meta-row span::before {
+      content: attr(data-k) " ";
+      color: var(--accent-dim);
+    }
+
+    /* ---------- Stack (yaml-ish block) ---------- */
+    .stack-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+    }
+
+    .stack-group {
+      padding: .55rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .stack-group:last-child {
+      border-bottom: none;
+    }
+
+    .stack-key {
+      font-family: "JetBrains Mono", monospace;
+      font-size: .82rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: .55rem;
+    }
+
+    .stack-key::before {
+      content: "- ";
+      color: var(--accent);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+    }
+
+    .tag {
+      font-size: .76rem;
+      padding: .22rem .6rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    /* ---------- Projects ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.3rem 1.4rem;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-4px);
+      border-color: var(--accent-dim);
+      box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .6);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: .5rem;
+    }
+
+    .card h3 a {
+      color: var(--text);
+    }
+
+    .card h3 a::before {
+      content: "$ ";
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .card h3 a:hover {
+      color: var(--accent);
+    }
+
+    .lang {
+      font-family: "JetBrains Mono", monospace;
+      font-size: .72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .lang .dot {
+      display: inline-block;
+      width: .55rem;
+      height: .55rem;
+      border-radius: 50%;
+      margin-right: .35rem;
+      vertical-align: middle;
+    }
+
+    .card p {
+      font-size: .9rem;
+      color: var(--text);
+      margin: .8rem 0 1rem;
+      flex: 1;
+    }
+
+    .card .tags {
+      margin-bottom: 1rem;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 1rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: .72rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: .8rem;
+    }
+
+    /* ---------- Principles ---------- */
+    .principles {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .principle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.1rem 1.4rem;
+    }
+
+    .principle h3 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: .95rem;
+      margin-bottom: .4rem;
+    }
+
+    .principle p {
+      font-size: .92rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ---------- Contact ---------- */
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 1.2rem;
+    }
+
+    .contact-links a {
+      font-family: "JetBrains Mono", monospace;
+      font-size: .85rem;
+      padding: .6rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .contact-links a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer {
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: .74rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.4rem;
+      margin-top: 2rem;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 760px) {
+      .shell {
+        flex-direction: column;
+      }
+
+      nav {
+        position: sticky;
+        width: 100%;
+        height: auto;
+        top: 0;
+        z-index: 50;
+        padding: .9rem 1rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        background: rgba(15, 18, 22, .92);
+        backdrop-filter: blur(6px);
+      }
+
+      .brand {
+        margin-bottom: .8rem;
+      }
+
+      nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .3rem;
+      }
+
+      nav a {
+        padding: .35rem .6rem;
+        font-size: .76rem;
+        border-left: none;
+      }
+
+      nav a::before {
+        content: "";
+      }
+
+      nav a[aria-current="true"] {
+        border-left: none;
+      }
+
+      main {
+        padding: 2rem 1.2rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .brand .name .cursor {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <div class="shell">
+    <nav aria-label="Section navigation">
+      <div class="brand">
+        <div class="name">yhali_weizman<span class="cursor" aria-hidden="true">_</span></div>
+        <div class="role">ml/devops engineer</div>
+      </div>
+      <ul>
+        <li><a href="#about">about</a></li>
+        <li><a href="#stack">stack</a></li>
+        <li><a href="#projects">projects</a></li>
+        <li><a href="#principles">principles</a></li>
+        <li><a href="#contact">contact</a></li>
+      </ul>
+    </nav>
+
+    <main id="main">
+      <!-- ABOUT -->
+      <section id="about" aria-labelledby="about-h">
+        <span class="kicker"># whoami</span>
+        <h1 id="about-h"> ML/DevOps Engineer building data and AI infrastructure that survives
+          production.</h1>
+        <p class="lede">
+          I work where architecture meets the shell prompt - data warehouse / data-lake platforms,
+          high-performance AI inference pipelines, and the Python and Bash tooling that keeps them
+          running. I lead a small team of engineers, contribute hands-on to the implementation, and spearhead the DevOps practices of my department.
+        </p>
+        <p>
+          Bias toward decoupled, stateless, fault-tolerant design, reproducible infrastructure, and
+          keyboard-first tooling that needs no babysitting. I build for real constraints: air-gapped
+          environments, least privilege, GitOps ownership, and the enterprise overhead everyone
+          pretends isn't there.
+        </p>
+        <div class="meta-row">
+          <span data-k="location:">Israel - Ramat Gan · Meitar</span>
+          <span data-k="focus:">Learning + Having fun!</span>
+          <span data-k="experience:">2.5 years</span>
+        </div>
+      </section>
+
+      <!-- STACK -->
+      <section id="stack" aria-labelledby="stack-h">
+        <h2 id="stack-h"><span class="hash">##</span> stack</h2>
+        <div class="stack-block mono" role="list">
+          <div class="stack-group" role="listitem">
+            <span class="stack-key">languages</span>
+            <div class="tags">
+              <span class="tag">Go</span><span class="tag">Python</span>
+              <span class="tag">TypeScript / Node.js</span><span class="tag">Bash</span><span class="tag">Powershell</span>
+            </div>
+          </div>
+          <div class="stack-group" role="listitem">
+            <span class="stack-key">ai_infra</span>
+            <div class="tags">
+              <span class="tag">Ollama</span>
+              <span class="tag">vLLM</span><span class="tag">NVIDIA Triton</span>
+              <span class="tag">Whisper (STT)</span><span class="tag">Pyannote (diarization)</span>
+              <span class="tag">OCR pipelines</span>
+            </div>
+          </div>
+          <div class="stack-group" role="listitem">
+            <span class="stack-key">devops tools</span>
+            <div class="tags">
+              <span class="tag">Kubernetes</span>
+              <span class="tag">Helm</span><span class="tag">Docker</span>
+              <span class="tag">Minikube</span><span class="tag">Terraform</span><span class="tag">Git</span>
+            </div>
+            <div class="stack-group" role="listitem" style="margin-left: 1.5em; margin-top: 0.5em;">
+              <span class="stack-key">observability</span>
+              <div class="tags">
+                <span class="tag">Prometheus</span><span class="tag">Grafana</span>
+                <span class="tag">ELK Stack</span><span class="tag">OpenSearch</span><span class="tag">Splunk</span>
+              </div>
+            </div>
+            <div class="stack-group" role="listitem" style="margin-left: 1.5em; margin-top: 0.5em;">
+              <span class="stack-key">cloud & hosting</span>
+              <div class="tags">
+                <span class="tag">GCP</span><span class="tag">AWS</span><span class="tag">OpenShift</span>
+              </div>
+            </div>
+            <div class="stack-group" role="listitem" style="margin-left: 1.5em; margin-top: 0.5em;">
+              <span class="stack-key">ci/cd tools</span>
+              <div class="tags">
+                <span class="tag">GitLab CI/CD</span><span class="tag">Cloud Build</span>
+                <span class="tag">Google Cloud Build</span><span class="tag">GitHub Actions</span><span class="tag">Argo CD</span>
+              </div>
+            </div>
+          </div>
+          <div class="stack-group" role="listitem" style="margin-left: 1.5em; margin-top: 0.5em;">
+              <span class="stack-key">Operating Systems</span>
+              <div class="tags">
+                <span class="tag">Arch Linux</span><span class="tag">Ubuntu</span>
+                <span class="tag">Windows</span>
+              </div>
+            </div>
+          <div class="stack-group" role="listitem">
+            <span class="stack-key">data and streaming</span>
+            <div class="tags">
+              <span class="tag">Kafka</span><span class="tag">ksqlDB</span>
+              <span class="tag">Redis Streams</span><span class="tag">PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects" aria-labelledby="projects-h">
+        <h2 id="projects-h"><span class="hash">##</span> projects <span class="lang" style="font-weight:400"># selected
+            public work</span></h2>
+        <div class="grid">
+
+          <article class="card">
+            <div class="card-head">
+              <h3><a href="https://github.com/YhaliWaizman/Capture">capture</a></h3>
+              <span class="lang"><span class="dot" style="background:#00ADD8"></span>Go</span>
+            </div>
+            <p>
+              Static-analysis CLI that catches the drift between environment variables declared in
+              <code>.env</code> / Dockerfiles and the ones actually referenced in source across Go, Python,
+              JS/TS. Pattern-based instead of full AST parsing - deterministic output and streaming file
+              reads so it drops straight into CI without slowing the pipeline.
+            </p>
+            <div class="tags">
+              <span class="tag">Go</span><span class="tag">static analysis</span>
+              <span class="tag">CLI</span><span class="tag">CI/CD</span>
+            </div>
+            <div class="card-meta"><span>★ 2</span><span>updated 2026-05</span></div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3><a href="https://github.com/YhaliWaizman/my-ai-brain">my-ai-brain</a></h3>
+              <span class="lang"><span class="dot" style="background:#3572A5"></span>Python</span>
+            </div>
+            <p>
+              A self-hosted RAG stack that turns a WhatsApp export into an Obsidian knowledge vault -
+              per-contact and per-project summaries, a relationship graph, and queryable retrieval. The
+              batch processor keeps SQLite as its source of truth and pins one resident model on an 8&nbsp;GB
+              GPU, so ingestion is resumable and the whole thing runs on homelab hardware.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span><span class="tag">RAG</span>
+              <span class="tag">Ollama</span><span class="tag">Qdrant</span>
+              <span class="tag">Whisper</span><span class="tag">Docker Compose</span>
+            </div>
+            <div class="card-meta"><span>★ 0</span><span>updated 2026-06</span></div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3><a href="https://github.com/YhaliWaizman/scryfall-tagger-etl">scryfall-tagger-etl</a></h3>
+              <span class="lang"><span class="dot" style="background:#3572A5"></span>Python</span>
+            </div>
+            <p>
+              ETL that pulls the full Magic: The Gathering universe from the Scryfall API and Scryfall
+              Tagger into a normalized Postgres schema (sets → oracle cards → printings → faces, plus
+              community tags/relationships). Split extractor / transformer / loader layers and a
+              containerized job process make it a clean base for analytics or LLM training data.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span><span class="tag">ETL</span>
+              <span class="tag">PostgreSQL</span><span class="tag">Scryfall API</span>
+              <span class="tag">Docker Compose</span>
+            </div>
+            <div class="card-meta"><span>★ 0</span><span>updated 2026-06</span></div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3><a href="https://github.com/YhaliWaizman/tailscale-aws-vpn-tf">tailscale-aws-vpn-tf</a></h3>
+              <span class="lang"><span class="dot" style="background:#844FBA"></span>HCL</span>
+            </div>
+            <p>
+              Production-grade Terraform for a hardened Tailscale exit node on AWS: zero inbound rules,
+              SSM Session Manager instead of SSH, IMDSv2 enforced, encrypted EBS, and a least-privilege IAM
+              role that can read only the auth key. Secrets live in Secrets Manager and never touch
+              Terraform state or instance logs.
+            </p>
+            <div class="tags">
+              <span class="tag">Terraform</span><span class="tag">AWS</span>
+              <span class="tag">Tailscale</span><span class="tag">least privilege</span>
+              <span class="tag">IaC</span>
+            </div>
+            <div class="card-meta"><span>★ 0</span><span>updated 2026-06</span></div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- PRINCIPLES -->
+      <section id="principles" aria-labelledby="principles-h">
+        <h2 id="principles-h"><span class="hash">##</span> how_i_work</h2>
+        <div class="principles">
+          <div class="principle">
+            <h3>State lives in storage, not memory</h3>
+            <p>
+              For batch and microservice workloads I push wait-state and system state out of process into
+              durable storage (e.g. GCS) so a pod eviction or crash never costs data integrity. Decoupled,
+              stateless, fault-tolerant by default.
+            </p>
+          </div>
+          <div class="principle">
+            <h3>Pragmatic infrastructure over ideology</h3>
+            <p>
+              I engineer around real organizational and bureaucratic constraints - reaching for a
+              GCS-backed state flow when Cloud Tasks or Cloud Workflows add more friction than value.
+              The design that ships and holds up wins.
+            </p>
+          </div>
+          <div class="principle">
+            <h3>Enterprise- and air-gap-aware by design</h3>
+            <p>
+              Air-gapped environments, internal registries, least privilege, CI/CD ownership, and GitOps
+              compatibility are inputs to the architecture, not afterthoughts. Helm over ad-hoc YAML,
+              containers over host installs, declarative over imperative.
+            </p>
+          </div>
+          <div class="principle">
+            <h3>Production readability over cleverness</h3>
+            <p>
+              Small, focused services with clear separation of concerns and no magic behavior. I plan for
+              failure modes, observability, rollout and rollback from the start - reproducibility and
+              automation over one-off heroics.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" aria-labelledby="contact-h">
+        <h2 id="contact-h"><span class="hash">##</span> contact</h2>
+        <p>Open to conversations about platform engineering, AI infrastructure, and internal developer platforms.</p>
+        <div class="contact-links">
+          <a href="https://github.com/YhaliWaizman">→ github.com/YhaliWaizman</a>
+          <!-- TODO: replace with real email -->
+          <a href="mailto:yhaliwa1@gmail.com">→ email</a>
+          <!-- TODO: replace with real LinkedIn URL -->
+          <a href="https://www.linkedin.com/in/yhali-weizman/">→ linkedin</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Highlight the nav link for the section currently in view.
+    (function () {
+      const links = new Map(
+        [...document.querySelectorAll('nav a[href^="#"]')].map(a => [a.getAttribute('href').slice(1), a])
+      );
+      const sections = [...document.querySelectorAll('main section[id]')];
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            links.forEach(a => a.removeAttribute('aria-current'));
+            const active = links.get(entry.target.id);
+            if (active) active.setAttribute('aria-current', 'true');
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+      sections.forEach(s => observer.observe(s));
+    })();
+  </script>
+</body>
+
+</html>
