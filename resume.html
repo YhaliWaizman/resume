@@ -494,9 +494,9 @@
         padding: 2rem 1.2rem;
       }
 
-      /* ponytail: sticky top nav measures 131px here; clear it plus a small gap */
+      /* Small breathing gap; the nav's own height is handled by scroll-padding-top (set in JS). */
       section {
-        scroll-margin-top: 9.5rem;
+        scroll-margin-top: .75rem;
       }
     }
 
@@ -781,6 +781,20 @@
       }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
 
       sections.forEach(s => observer.observe(s));
+    })();
+
+    // Land anchored sections flush under the sticky top nav (mobile) by offsetting
+    // anchor jumps by the nav's real height. scroll-padding-top self-corrects on wrap/resize.
+    (function () {
+      const nav = document.querySelector('nav');
+      const topNav = window.matchMedia('(max-width: 760px)');
+      const sync = () => {
+        document.documentElement.style.scrollPaddingTop =
+          topNav.matches ? nav.offsetHeight + 'px' : '';
+      };
+      sync();
+      topNav.addEventListener('change', sync);
+      window.addEventListener('resize', sync);
     })();
   </script>
 </body>
