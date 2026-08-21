@@ -14,7 +14,7 @@ variable "domain_name" {
 
 variable "github_repo" {
   type    = string
-  default = "<owner>/resume"
+  default = "YhaliWaizman/resume"
 }
 
 variable "budget_alert_email" {
