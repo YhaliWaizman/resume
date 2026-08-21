@@ -106,7 +106,7 @@ ${postsMarkup}
 };
 
 const rebuildBlogHtml = (cwd) => {
-  const blogDir = join(cwd, "blog");
+  const blogDir = join(cwd, "site", "blog");
   const files = readdirSync(blogDir).filter((fileName) => fileName.endsWith(".md"));
   const posts = files
     .map((fileName) => {
@@ -125,7 +125,7 @@ const rebuildBlogHtml = (cwd) => {
     .filter(Boolean)
     .sort((a, b) => b.date.localeCompare(a.date));
 
-  writeFileSync(join(cwd, "blog.html"), renderBlogHtml(posts), "utf8");
+  writeFileSync(join(cwd, "site", "blog.html"), renderBlogHtml(posts), "utf8");
 };
 
 const main = () => {
@@ -145,7 +145,7 @@ const main = () => {
 
   const date = new Date().toISOString().slice(0, 10);
   const cwd = process.cwd();
-  const blogDir = join(cwd, "blog");
+  const blogDir = join(cwd, "site", "blog");
   const fileName = `${date}-${slug}.md`;
   const postPath = join(blogDir, fileName);
   const markdown = buildPostMarkdown({ title, date, slug, body });

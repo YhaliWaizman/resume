@@ -21,7 +21,7 @@ test("creates markdown post and regenerates blog index", () => {
 
   const today = new Date().toISOString().slice(0, 10);
   const fileName = `${today}-hello-world.md`;
-  const postPath = join(workdir, "blog", fileName);
+  const postPath = join(workdir, "site", "blog", fileName);
 
   assert.equal(existsSync(postPath), true);
 
@@ -32,7 +32,7 @@ test("creates markdown post and regenerates blog index", () => {
   assert.match(post, /slug: hello-world/);
   assert.match(post, /Body line/);
 
-  const blogHtml = readFileSync(join(workdir, "blog.html"), "utf8");
+  const blogHtml = readFileSync(join(workdir, "site", "blog.html"), "utf8");
   assert.match(blogHtml, /<h1>Blog<\/h1>/);
   assert.match(blogHtml, new RegExp(`/blog/${fileName}`));
   assert.match(blogHtml, /Hello World/);
