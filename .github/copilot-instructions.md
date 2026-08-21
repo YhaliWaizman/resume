@@ -43,7 +43,10 @@ over HTTPS.
 - GitHub Actions assumes an AWS deploy role through GitHub OIDC.
 - A separate Terraform role and S3 backend are used for infrastructure state.
 
-The bootstrap stack in `infra/bootstrap/` creates the Terraform state bucket.
+The bootstrap stack in `infra/bootstrap/` creates the Terraform state bucket
+and all IAM resources (the GitHub OIDC provider, the deploy role, and the
+Terraform role). IAM lives there so the CI Terraform role needs no IAM
+permissions of its own. Run bootstrap manually with admin credentials.
 CloudFront and ACM must remain in `us-east-1`.
 
 ## Repository Conventions
@@ -64,6 +67,6 @@ CloudFront and ACM must remain in `us-east-1`.
   shape, not as a credentials file.
 - OIDC trust conditions retain both the repository-name subject and the
   immutable owner/repository-ID subject. Preserve both when changing
-  `infra/oidc.tf`.
+  `infra/bootstrap/iam.tf`.
 - Cloudflare records used by this stack are DNS-only (`proxied = false`) so
   Cloudflare does not proxy traffic on top of CloudFront.

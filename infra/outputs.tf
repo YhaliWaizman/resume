@@ -1,11 +1,3 @@
-output "deploy_role_arn" {
-  value = aws_iam_role.deploy.arn
-}
-
-output "terraform_role_arn" {
-  value = aws_iam_role.terraform.arn
-}
-
 output "site_bucket_name" {
   value = aws_s3_bucket.site.id
 }

@@ -32,18 +32,29 @@ resource "aws_iam_role" "deploy" {
   assume_role_policy = data.aws_iam_policy_document.deploy_trust.json
 }
 
+data "aws_caller_identity" "current" {}
+
+locals {
+  # Same derivation as the site stack's aws_s3_bucket.site; the site bucket is
+  # created by that stack, so reference it by ARN rather than by resource.
+  site_bucket_arn = "arn:aws:s3:::${replace(var.domain_name, ".", "-")}"
+}
+
 data "aws_iam_policy_document" "deploy_permissions" {
   statement {
     actions   = ["s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
-    resources = [aws_s3_bucket.site.arn, "${aws_s3_bucket.site.arn}/*"]
+    resources = [local.site_bucket_arn, "${local.site_bucket_arn}/*"]
   }
   statement {
-    actions   = ["cloudfront:CreateInvalidation"]
-    resources = [aws_cloudfront_distribution.site.arn]
+    actions = ["cloudfront:CreateInvalidation"]
+    # ponytail: wildcard because the distribution is created by the site stack
+    # after this one. Narrow to a distribution ID var if a second one appears.
+    resources = ["arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/*"]
   }
 }
 
 resource "aws_iam_role_policy" "deploy" {
+  name   = "deploy-permissions"
   role   = aws_iam_role.deploy.id
   policy = data.aws_iam_policy_document.deploy_permissions.json
 }
