@@ -1,0 +1,4 @@
+cloudflare_api_token = "REPLACE_ME"
+cloudflare_zone_id   = "REPLACE_ME"
+domain_name          = "yhali-waizman.com"
+github_repo          = "<owner>/resume"
