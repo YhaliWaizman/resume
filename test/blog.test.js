@@ -11,7 +11,7 @@ test("ships the published migration post in the blog index", () => {
 
   assert.match(resume, /href="\/blog\.html"/);
   assert.match(blog, /<title>Blog - Yhali Weizman<\/title>/);
-  assert.match(blog, /href="\/blog\/2026-08-21-my-resume-site-outgrew-my-homelab\.md"/);
+  assert.match(blog, /href="\/blog\/2026-08-21-my-resume-site-outgrew-my-homelab\.html"/);
   assert.match(blog, /My Resume Site Outgrew My Homelab/);
   assert.match(blog, /aria-current="page"/);
 });

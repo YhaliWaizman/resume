@@ -34,9 +34,15 @@ test("creates markdown post and regenerates blog index", () => {
 
   const blogHtml = readFileSync(join(workdir, "site", "blog.html"), "utf8");
   assert.match(blogHtml, /<h1>Blog<\/h1>/);
-  assert.match(blogHtml, new RegExp(`/blog/${fileName}`));
+  assert.match(blogHtml, new RegExp(`/blog/${today}-hello-world.html`));
   assert.match(blogHtml, /Hello World/);
   assert.match(blogHtml, new RegExp(`<time datetime="${today}">${today}<\\/time>`));
+
+  const postHtmlPath = join(workdir, "site", "blog", `${today}-hello-world.html`);
+  assert.equal(existsSync(postHtmlPath), true);
+  const postHtml = readFileSync(postHtmlPath, "utf8");
+  assert.match(postHtml, /<title>Hello World - Yhali Weizman<\/title>/);
+  assert.match(postHtml, /<p>Body line<\/p>/);
 });
 
 test("fails with missing arguments", () => {
