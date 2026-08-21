@@ -14,7 +14,10 @@ data "aws_iam_policy_document" "deploy_trust" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:ref:refs/heads/main"]
+      values = [
+        "repo:${var.github_repo}:ref:refs/heads/main",
+        "repo:${var.github_repo_immutable}:ref:refs/heads/main",
+      ]
     }
     condition {
       test     = "StringEquals"
@@ -55,7 +58,10 @@ data "aws_iam_policy_document" "terraform_trust" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:environment:terraform-manual"]
+      values = [
+        "repo:${var.github_repo}:environment:terraform-manual",
+        "repo:${var.github_repo_immutable}:environment:terraform-manual",
+      ]
     }
     condition {
       test     = "StringEquals"
