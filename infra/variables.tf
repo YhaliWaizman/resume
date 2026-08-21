@@ -16,3 +16,7 @@ variable "github_repo" {
   type    = string
   default = "<owner>/resume"
 }
+
+variable "budget_alert_email" {
+  type = string
+}
