@@ -1,0 +1,32 @@
+name: Deploy site
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run review
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+      - run: |
+          aws s3 sync . s3://${{ vars.SITE_BUCKET_NAME }} \
+            --exclude ".git/*" --exclude "infra/*" --exclude "node_modules/*" \
+            --exclude ".github/*" --exclude "docs/*" --exclude "scripts/*" \
+            --exclude "test/*" --delete
+      - run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
