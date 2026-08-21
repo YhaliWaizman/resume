@@ -15,4 +15,5 @@ test("ships a linked blog placeholder", () => {
   assert.match(blog, /First post coming soon\./);
   assert.match(blog, /aria-current="page"/);
   assert.match(dockerfile, /COPY blog\.html \/usr\/share\/nginx\/html\/blog\.html/);
+  assert.match(dockerfile, /COPY blog \/usr\/share\/nginx\/html\/blog/);
 });

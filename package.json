@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "review": "node --test"
+    "review": "node --test",
+    "blog": "node scripts/new-blog-post.js"
   }
 }
